@@ -9,14 +9,14 @@
 ## Governing Equation
 
 The Lattice Boltzmann Equation with BGK approximation
-\[
-\frac{\partial f}{\partial t} + \mathbf{c} \cdot \nabla f = \Omega(f) \Rightarrow f_i(\mathbf{x} + \mathbf{c}_i \Delta t, t + \Delta t) = f_i(\mathbf{x}, t) - \frac{1}{\tau} \left( f_i - f_i^{eq} \right)
-\]
+
+$\frac{\partial f}{\partial t} + \mathbf{c} \cdot \nabla f = \Omega(f) \Rightarrow f_i(\mathbf{x} + \mathbf{c}_i \Delta t, t + \Delta t) = f_i(\mathbf{x}, t) - \frac{1}{\tau} \left( f_i - f_i^{eq} \right)$
+
 
 Equilibrium Distribution Function
-\[
-f_i^{eq} = w_i \rho \left[ 1 + \frac{\mathbf{c}_i \cdot \mathbf{u}}{c_s^2} + \frac{(\mathbf{c}_i \cdot \mathbf{u})^2}{2c_s^4} - \frac{\mathbf{u}^2}{2c_s^2} \right]
-\]
+
+$f_i^{eq} = w_i \rho \left[ 1 + \frac{\mathbf{c}_i \cdot \mathbf{u}}{c_s^2} + \frac{(\mathbf{c}_i \cdot \mathbf{u})^2}{2c_s^4} - \frac{\mathbf{u}^2}{2c_s^2} \right]$
+
 
 ## Macroscopic Quantities and Boundary Condition
 

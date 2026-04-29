@@ -92,6 +92,12 @@ def compute_residual(ux, uy, ux_old, uy_old):
     mag_sq = np.sum(ux**2 + uy**2)
     return np.sqrt(diff_sq) / np.sqrt(mag_sq) if mag_sq > 0.0 else 0.0
 
+# Raise warning if the flow is likely to be unstable
+cs = np.sqrt(c2) # lattice speed of sound
+Ma = u_lid / cs # Mach number
+safety_factor = 0.95
+if omega >= safety_factor * 2.0 or Ma >= 0.3:
+    raise Warning(f'Flow may be unstable: omega={omega:.2f} (should be < {safety_factor * 2.0:.2f}), Ma={Ma:.2f} (should be < 0.3)')
 
 # Simulation 
 feq = compute_feq(rho, ux, uy)

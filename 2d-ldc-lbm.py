@@ -29,7 +29,7 @@ def lbm_step(f, rho, ux, uy, cx, cy, w, omega, nx, ny):
     return f_streamed
 
 # function to apply boundary conditions
-def apply_bc(f, cx, cy, opp, w, ux, uy, u_lid):
+def apply_bc(f, cx, cy, opp, w, u_lid):
     for i in range(9):
         # no-slip boundary conditions (bounce-back)
         if cx[i] == -1: # right wall
@@ -39,7 +39,7 @@ def apply_bc(f, cx, cy, opp, w, ux, uy, u_lid):
         if cy[i] == 1: # bottom wall
             f[:, 0, i] = f[:, 0, opp[i]]
         if cy[i] == -1: # top wall (lid)
-            rho_wall = (1.0 / (1.0 - uy[:, -1])) * (f[:, -1, 0] + f[:, -1, 1] + f[:, -1, 3] + 2.0 * (f[:, -1, 2] + f[:, -1, 5] + f[:, -1, 6]))
+            rho_wall = f[:, -1, 0] + f[:, -1, 1] + f[:, -1, 3] + 2.0 * (f[:, -1, 2] + f[:, -1, 5] + f[:, -1, 6])
             f[:, -1, i] = f[:, -1, opp[i]] + 6.0 * w[i] * rho_wall * u_lid * cx[i]
     return f
 
@@ -103,16 +103,16 @@ def run_simulation():
     # Time-stepping loop
     for t in range(nt):
         f = lbm_step(f, rho, ux, uy, cx, cy, w, omega, nx, ny)
-        f = apply_bc(f, cx, cy, opp, w, ux, uy, u_lid)
+        f = apply_bc(f, cx, cy, opp, w, u_lid)
         rho, ux, uy = compute_macroscopic(f, cx, cy)
         if t % 1000 == 0:
             residual = compute_residual(ux, uy, ux_old, uy_old)
             print(f'Time step: {t}, Residual: {residual:.6e}')
-        if residual < 1e-5:
-            print(f'Simulation converged at time step {t}')
-            break
-        ux_old = ux.copy()
-        uy_old = uy.copy()
+            if residual < 1e-6:
+                print(f'Simulation converged at time step {t}')
+                break
+            ux_old = ux.copy()
+            uy_old = uy.copy()
 
     return rho, ux, uy, X, Y, nx, ny, x, y, Lx, Ly, u_lid, Re
 
